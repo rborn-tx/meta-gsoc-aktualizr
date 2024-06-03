@@ -5,7 +5,8 @@ SECTION = "base"
 LICENSE = "MPL-2.0"
 LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=815ca599c9df247a0c7f619bab123dad"
 
-DEPENDS = "boost curl openssl libarchive libsodium sqlite3 asn1c-native ostree"
+DEPENDS = "boost curl openssl libarchive libsodium sqlite3 asn1c-native"
+DEPENDS:append = "${@bb.utils.contains('OSTREE_ENABLED', '1', ' ostree ', '', d)}"
 DEPENDS:append = "${@bb.utils.contains('PTEST_ENABLED', '1', ' coreutils-native net-tools-native aktualizr-native ', '', d)}"
 RDEPENDS:${PN}:class-target = "lshw"
 RRECOMMENDS:${PN}_class-target = "${PN}-hwid"
@@ -43,13 +44,17 @@ inherit cmake pkgconfig ptest systemd
 # can be enabled manually by setting 'PTEST_ENABLED:pn-aktualizr' to '1' in local.conf
 PTEST_ENABLED = "0"
 
+# GSoC: disable OSTree:
+OSTREE_ENABLED = "0"
+
 SYSTEMD_PACKAGES = "${PN} ${PN}-secondary"
 SYSTEMD_SERVICE:${PN} = "aktualizr.service"
 SYSTEMD_SERVICE:${PN}-secondary = "aktualizr-secondary.service"
 
 EXTRA_OECMAKE = "-DCMAKE_BUILD_TYPE=Release \
     ${@bb.utils.contains('PTEST_ENABLED', '1', '-DTESTSUITE_VALGRIND=on', '', d)} \
-    -DBUILD_OSTREE=ON"
+    ${@bb.utils.contains('OSTREE_ENABLED', '1', '-DBUILD_OSTREE=ON', '-DBUILD_OSTREE=OFF', d)} \
+"
 
 GARAGE_SIGN_OPS = "${@ d.expand('-DGARAGE_SIGN_ARCHIVE=${WORKDIR}/cli-${GARAGE_SIGN_PV}.tgz') if not oe.types.boolean(d.getVar('GARAGE_SIGN_AUTOVERSION')) else ''}"
 PKCS11_ENGINE_PATH = "${libdir}/engines-3/pkcs11.so"
