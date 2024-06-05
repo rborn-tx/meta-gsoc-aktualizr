@@ -9,7 +9,7 @@ DEPENDS = "boost curl openssl libarchive libsodium sqlite3 asn1c-native"
 DEPENDS:append = "${@bb.utils.contains('OSTREE_ENABLED', '1', ' ostree ', '', d)}"
 DEPENDS:append = "${@bb.utils.contains('PTEST_ENABLED', '1', ' coreutils-native net-tools-native aktualizr-native ', '', d)}"
 RDEPENDS:${PN}:class-target = "lshw"
-RRECOMMENDS:${PN}_class-target = "${PN}-hwid"
+RRECOMMENDS:${PN}:class-target = "${PN}-hwid"
 
 RDEPENDS:${PN}-ptest += "bash cmake curl net-tools python3-core python3-misc python3-modules openssl-bin sqlite3 valgrind"
 
@@ -33,7 +33,7 @@ SRC_URI = " \
 SRC_URI[garagesign.md5sum] = "584cd16aa7824e34b593dae63796466b"
 SRC_URI[garagesign.sha256sum] = "c7d5fdceef3e815363e3aa398c38643ca213f9b7f66d50f55c76a66cb74565d2"
 
-SRCREV = "eced3900754b51273733c66588ca44c44ba03b2c"
+SRCREV = "3662ed09e5352999e6a94ee47960bbc523c6b059"
 BRANCH ?= "master"
 
 S = "${WORKDIR}/git"
