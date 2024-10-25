@@ -12,7 +12,7 @@ do_install:prepend() {
 	if grep -qi '^\[handlers\]' ${WORKDIR}/system.conf; then
 		bberror "RAUC's system.conf already has a [handlers] section; install task needs review."
 	fi
-	echo -e '\n[handlers]\npre-install=${bindir}/pre-install-handler.sh' >> ${WORKDIR}/system.conf
+	printf '\n[handlers]\npre-install=${bindir}/pre-install-handler.sh' >> ${WORKDIR}/system.conf
 }
 
 do_install:append() {
